@@ -19,7 +19,7 @@
 html,body{height:100%;margin:0}
 body{font:14px/1.5 'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:#dfe5e8;-webkit-font-smoothing:antialiased}
 #map{position:fixed;inset:0;background:#e6ebee}
-.leaflet-tile-pane{filter:saturate(.3) contrast(.92) brightness(1.04)}
+.leaflet-tile-pane{filter:saturate(.45) contrast(.95) brightness(1.03)}
 .leaflet-container{font:inherit}
 .panel{position:fixed;z-index:1000;left:16px;top:16px;bottom:16px;width:372px;background:rgba(14,20,25,.94);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);display:flex;flex-direction:column;overflow:hidden}
 .ph{padding:18px 20px 14px;border-bottom:1px solid var(--line)}
@@ -157,7 +157,7 @@ const state = { enabled: [true].concat(Array(F - 1).fill(false)), rain: false, s
 
 const map = L.map('map', { zoomControl: false, preferCanvas: true, attributionControl: true }).setView([21.75, 102.95], 9);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">Những người đóng góp OpenStreetMap</a>' }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { subdomains: 'abc', maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">Những người đóng góp OpenStreetMap</a>, kiểu bản đồ Humanitarian OSM Team, máy chủ OSM France' }).addTo(map);
 const renderer = L.canvas({ padding: .3 });
 
 // mask outside province + outline
