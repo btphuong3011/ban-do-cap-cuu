@@ -13,7 +13,7 @@ Mô hình minh họa: bao nhiêu người dân Điện Biên tới được nơi
 - **Đoạn đường xung yếu:** thử cắt lần lượt 150 đoạn quốc lộ, tỉnh lộ, đường huyện có nhiều người đi qua nhất trên đường ngắn nhất, đo số dân bị đẩy ra ngoài 2 giờ.
 - Năng lực mổ cấp cứu của từng cơ sở là **giả định** để minh họa; bấm vào cơ sở trên bản đồ để bật hoặc tắt.
 
-Mã nguồn mô hình nằm trong thư mục `mo-hinh` của hồ sơ (Python: numpy, scipy).
+Mã nguồn mô hình nằm trong thư mục [`model`](model/) (Python: numpy, scipy): `extract_roads_gpkg.py` lấy đường từ bản xuất OpenStreetMap của HOT, `extract_pop.py` lấy dân số Kontur, `build_model.py` dựng đồ thị, tính thời gian và tìm đoạn đường xung yếu.
 
 Đây là công cụ hỗ trợ lập kế hoạch cho cơ quan y tế, không dùng để chỉ đường cấp cứu. Khi có cấp cứu, hãy gọi 115.
 
