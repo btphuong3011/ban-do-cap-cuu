@@ -342,6 +342,7 @@ const R = L.canvas({ padding: .4 });
 const ring = D.boundary.map(([x, y]) => [y, x]);
 const bounds = L.latLngBounds(ring);
 let userMoved = false;
+const sized = () => { const z = map.getSize(); return z.x > 80 && z.y > 80; };
 function fitAll() { const z = map.getSize(); if (z.x > 80 && z.y > 80) map.fitBounds(bounds, { padding: [24, 24] }); else map.setView(bounds.getCenter(), 8); }
 fitAll();
 L.polygon([[[-89, -179], [-89, 179], [89, 179], [89, -179]], ring], { stroke: false, fillColor: '#F6F3ED', fillOpacity: .72, interactive: false, renderer: R }).addTo(map);
@@ -401,7 +402,7 @@ const routeLayer = L.layerGroup().addTo(map);
 // ---------- render ----------
 let cur = null, curA = null, shownPct = null;
 function countTo(el, from, to, fmt, ms = 550) {
-  if (from == null || !isFinite(from)) { el.textContent = fmt(to); return; }
+  if (from == null || !isFinite(from) || document.hidden) { el.textContent = fmt(to); return; }
   const t0 = performance.now();
   const tick = now => { const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(from + (to - from) * e); if (k < 1) requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
@@ -481,7 +482,7 @@ function renderStep3() {
   document.getElementById('clist').innerHTML = items.join('');
   document.querySelectorAll('#clist .crow').forEach(b => b.onclick = () => {
     S.cl = +b.dataset.c; render();
-    if (S.cl >= 0) { const c = D.closures[S.cl]; map.flyTo([c.lat, c.lon], 10, { duration: .7 }); }
+    if (S.cl >= 0 && sized()) { const c = D.closures[S.cl]; map.flyTo([c.lat, c.lon], 10, { duration: .7 }); }
   });
 }
 let q = '';
@@ -503,7 +504,7 @@ function renderStep4() {
 function toggle(i, fly) {
   if (i === 0) return;
   S.en[i] = !S.en[i]; render(i);
-  if (fly) map.panTo([D.facilities[i].lat, D.facilities[i].lon], { animate: true, duration: .5 });
+  if (fly && sized()) map.panTo([D.facilities[i].lat, D.facilities[i].lon], { animate: true, duration: .5 });
   hideHint();
 }
 function setScen(s) { S.en = S.en.map((_, i) => s === 'B' || i === 0); render(); }
@@ -613,7 +614,7 @@ function openCard(a) {
     const ll = info.route.map(([x, y]) => [y, x]);
     L.polyline(ll, { color: '#fff', weight: 8, opacity: 1, renderer: R, interactive: false }).addTo(routeLayer);
     L.polyline(ll, { color: '#15222A', weight: 4.5, opacity: 1, renderer: R, interactive: false }).addTo(routeLayer);
-    map.fitBounds(L.latLngBounds(ll), { padding: [60, 60], maxZoom: 11 });
+    if (sized()) map.fitBounds(L.latLngBounds(ll), { padding: [60, 60], maxZoom: 11 });
   }
   const md = document.getElementById('modal'); md.classList.add('open'); document.getElementById('mbar').hidden = false;
   fitSheet(); md.scrollTop = 0; document.getElementById('btnPrint').focus();
