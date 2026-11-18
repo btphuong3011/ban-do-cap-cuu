@@ -650,6 +650,7 @@ else if (hsh === 'shot-4' || hsh === 'shot-card') {
   openCard(top);
 } else if (hsh.startsWith('khu-')) { const a = +hsh.slice(4); if (D.areas[a]) { setStep(4); openCard(a); } }
 if (hsh.startsWith('shot')) hideHint();
+if ((hsh === 'shot-2' || hsh === 'shot-3') && window.innerWidth > 900) { const pn = document.querySelector('.panel'); pn.scrollTop = document.querySelector('.kpi').getBoundingClientRect().top - pn.getBoundingClientRect().top - 12; }
 })();
 </script>
 </body>
