@@ -341,7 +341,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { subdomain
 const R = L.canvas({ padding: .4 });
 const ring = D.boundary.map(([x, y]) => [y, x]);
 const bounds = L.latLngBounds(ring);
-map.fitBounds(bounds, { padding: [24, 24] });
+let userMoved = false;
+function fitAll() { const z = map.getSize(); if (z.x > 80 && z.y > 80) map.fitBounds(bounds, { padding: [24, 24] }); else map.setView(bounds.getCenter(), 8); }
+fitAll();
 L.polygon([[[-89, -179], [-89, 179], [89, 179], [89, -179]], ring], { stroke: false, fillColor: '#F6F3ED', fillOpacity: .72, interactive: false, renderer: R }).addTo(map);
 L.polygon(ring, { stroke: false, fillColor: '#FFFFFF', fillOpacity: .5, interactive: false, renderer: R }).addTo(map);
 L.polyline(ring.concat([ring[0]]), { color: '#15222A', weight: 2, opacity: .7, interactive: false, renderer: R }).addTo(map);
@@ -370,7 +372,7 @@ function zoomLayers() {
       if (h.a >= 0) pg.on('click', () => openCard(h.a));
       return pg.addTo(hexLayer);
     });
-    paintHex(); hexLayer.addTo(map); areaLayer.remove();
+    if (cur) paintHex(); hexLayer.addTo(map); areaLayer.remove();
   } else { hexLayer.remove(); areaLayer.addTo(map); }
   roadZoom();
 }
@@ -634,7 +636,9 @@ window.addEventListener('resize', () => { if (document.getElementById('modal').c
 
 // ---------- start ----------
 base.cov = evaluate(S.en, -1).cov;
-zoomLayers(); render();
+render(); zoomLayers();
+map.on('dragstart', () => { userMoved = true; });
+if (window.ResizeObserver) { let last = 0; new ResizeObserver(() => { const w = map.getContainer().clientWidth; map.invalidateSize(); if (!userMoved && Math.abs(w - last) > 40 && routeA < 0) fitAll(); last = w; }).observe(map.getContainer()); }
 const hsh = location.hash.slice(1);
 const gi = D.facilities.findIndex(f => f.name === D.greedy[0].facility);
 if (hsh === 'shot-2') { S.en[gi] = true; setStep(2); render(gi); }
